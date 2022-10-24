@@ -1,0 +1,55 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: ArgoCD
+metadata:
+  name: openshift-gitops
+  namespace: openshift-gitops
+  annotations:
+        argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource
+spec:
+  applicationSet: {}
+  resourceCustomizations: |
+    bitnami.com/SealedSecret:
+      health.lua: |
+        hs = {}
+        hs.status = "Healthy"
+        hs.message = "Controller doesnt report resource status"
+        return hs
+    route.openshift.io/Route:
+      ignoreDifferences: |
+        jsonPointers:
+        - /spec/host
+  server:
+    insecure: true
+    ## TODO RBAC Check...
+    route:
+      enabled: true
+      tls:
+        insecureEdgeTerminationPolicy: Redirect
+        termination: edge
+  dex:
+    openShiftOAuth: true
+    ##TODO RBAC Check..
+  rbac:
+    defaultPolicy: 'role:readonly'
+    policy: 'g, system:cluster-admins, role:admin'
+    scopes: '[groups]'
+    ##TODO RBAC Check....
+  configManagementPlugins: |
+    - name: kustomized-helm
+      init:
+        command: ["/bin/sh", "-c"]
+        args: ["helm dependency build ../../helm_base || true"]
+      generate:
+        command: ["/bin/sh", "-c"]
+        args: ["helm template ../../helm_base --name-template $ARGOCD_APP_NAME --set debug=${DEBUG},clusterName=${DESTINATION_NAME},baseRepoUrl=${BASE_REPO_URL}  --include-crds > ../../helm_base/all.yml && kustomize build"]
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: at-openshift-platform
+  namespace: openshift-gitops
+  labels:
+    argocd.argoproj.io/secret-type: repository
+stringData:
+  url: https://github.com/ngner/argocd-rhacm.git

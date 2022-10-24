@@ -1,0 +1,17 @@
+# kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# namespace to deploy all Resources to
+namespace: openshift-gitops
+
+generatorOptions:
+  disableNameSuffixHash: true
+
+# list of Resource Config to be Applied
+resources:
+  - namespace.yaml
+  - gitops-operator.yaml
+  #temporairly add a secret per the template in the README.md and then after delete it.
+  #  DO NOT Commit this secret to the git repo.
+  - ado-secret.yaml

@@ -1,0 +1,129 @@
+---
+apiVersion: operators.coreos.com/v1alpha1
+kind: Subscription
+metadata:
+  name: openshift-gitops-operator
+  namespace: openshift-operators
+  labels:
+    operators.coreos.com/openshift-gitops-operator.openshift-operators: ''
+spec:
+  channel: stable
+  installPlanApproval: Automatic
+  name: openshift-gitops-operator
+  source: redhat-operators
+  sourceNamespace: openshift-marketplace
+  #startingCSV: openshift-gitops-operator.v1.5.4
+---
+
+apiVersion: operators.coreos.com/v1
+
+kind: OperatorGroup
+metadata:
+  name: openshift-gitops-operator
+spec:
+  selector:
+    openshift-gitops-operator: "true"
+---
+
+#TODO RBAC check....
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: gitops-service-account
+rules:
+## Enable Argo to manage ACM resources apiGroup "operator.open-cluster-management.io"
+- apiGroups:
+  - open-cluster-management.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - ''
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - kafka.strimzi.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - ''
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - apps
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - image.openshift.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - camel.apache.org
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - apps.openshift.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - triggers.tekton.dev
+  resources:
+  - '*'
+  verbs:
+  - '*'
+- apiGroups:
+  - tekton.dev
+  resources:
+  - '*'
+  verbs:
+  - '*'
+
+
+---
+
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: gitops-service-account
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: gitops-service-account
+subjects:
+- kind: ServiceAccount
+  name: openshift-gitops-argocd-application-controller
+  namespace: openshift-gitops
+- kind: ServiceAccount
+  name: argocd-cluster-argocd-application-controller
+  namespace: openshift-gitops
+- kind: ServiceAccount
+  name: argocd-cluster-argocd-server
+  namespace: openshift-gitops
+
