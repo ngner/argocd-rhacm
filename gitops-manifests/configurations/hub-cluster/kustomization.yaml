@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+
+# list of sub folders to gather resources from.
+# This is required to enable the use of kustomize as argocd Cannot use Kustomize and recurse folders.
+# hence the list of folders below selectively recurse potentially to other kustomize instances in those folders.
+
+
+resources:
+  - example-configs
+  #- ldap
+  - certificates

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nicks-configmap
+  namespace: gitops-test
+data:
+  # property-like keys; each key maps to a simple value
+  how_good_is_OCP: great
+
+  # file-like keys
+  something_about_text: |
+    lots of interesting text 
+    on several lines of ig_unit_information:
+    client:  # not required. A dict object containing connection details.   

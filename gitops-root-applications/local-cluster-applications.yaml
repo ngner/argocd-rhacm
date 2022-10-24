@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: local-cluster-applications
+  ## Note these are NOT Argo Application resources. These are things like Operators and instances of Operators
+  namespace: openshift-gitops
+spec:
+  destination:
+    namespace: openshift-gitops
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: gitops-manifests/applications/hub-cluster  #  This path holds a kustomize with a list of subdirectories.
+    repoURL: https://github.com/ngner/argocd-rhacm.git
+    targetRevision: main
+  syncPolicy:
+    syncOptions:
+    - CreateNamespace=true
+    automated:
+      prune: true
+      selfHeal: true
