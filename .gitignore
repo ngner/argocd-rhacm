@@ -3,6 +3,9 @@
 gitops-manifests/configurations/hub-cluster/ldap
 gitops-manifests/configurations/hub-cluster/certificates
 
+*.patch
+*.orig
+
 # User-specific files
 *.rsuser
 *.suo
