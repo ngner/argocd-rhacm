@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: policies
+  name: rhacm-policies
   labels:
     argocd.argoproj.io/managed-by: openshift-gitops
 
