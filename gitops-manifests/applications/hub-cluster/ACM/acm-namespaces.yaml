@@ -5,6 +5,8 @@ metadata:
   name: rhacm-policies
   labels:
     argocd.argoproj.io/managed-by: openshift-gitops
+  annotations:
+    argocd.argoproj.io/sync-wave: "4"
 
 ---
 ### More namespaces here independent of the resources so namespace creation can be kept seperate for RBAC.
