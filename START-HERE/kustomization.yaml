@@ -14,4 +14,4 @@ resources:
   - gitops-operator.yaml
   #temporairly add a secret per the template in the README.md and then after delete it.
   #  DO NOT Commit this secret to the git repo.
-  - ado-secret.yaml
+  - git-secret.yaml

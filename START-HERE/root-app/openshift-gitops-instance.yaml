@@ -19,14 +19,50 @@ spec:
       ignoreDifferences: |
         jsonPointers:
         - /spec/host
+  resourceExclusions: |
+    - apiGroups:
+      - tekton.dev
+      clusters:
+      - '*'
+      kinds:
+      - TaskRun
+      - PipelineRun
+  repo:
+    env:
+    - name: KUSTOMIZE_PLUGIN_HOME
+      value: /etc/kustomize/plugin
+    initContainers:
+    - name: policy-generator-install
+      image: registry.redhat.io/rhacm2/multicluster-operators-subscription-rhel8:v2.7.0-57
+      command: ["/bin/bash"]
+      args: ["-c", "cp /etc/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator/PolicyGenerator /policy-generator/PolicyGenerator"]
+      volumeMounts:
+      - mountPath: /policy-generator
+        name: policy-generator
+    volumeMounts:
+    - mountPath: /etc/kustomize/plugin/policy.open-cluster-management.io/v1/policygenerator
+      name: policy-generator
+    volumes:
+    - emptyDir: {}
+      name: policy-generator
+  statusBadgeEnabled: true
   server:
-    insecure: true
-    ## TODO RBAC Check...
+    autoscale:
+      enabled: false
+    grpc:
+      ingress:
+        enabled: false
+    ingress:
+      enabled: false
     route:
       enabled: true
       tls:
-        insecureEdgeTerminationPolicy: Redirect
-        termination: edge
+        termination: reencrypt
+    service:
+      type: ''
+  tls:
+    ca: {}
+  kustomizeBuildOptions: --enable-alpha-plugins
   dex:
     openShiftOAuth: true
     ##TODO RBAC Check..
@@ -34,20 +70,12 @@ spec:
     defaultPolicy: 'role:readonly'
     policy: 'g, system:cluster-admins, role:admin'
     scopes: '[groups]'
-    ##TODO RBAC Check....
-  configManagementPlugins: |
-    - name: kustomized-helm
-      init:
-        command: ["/bin/sh", "-c"]
-        args: ["helm dependency build ../../helm_base || true"]
-      generate:
-        command: ["/bin/sh", "-c"]
-        args: ["helm template ../../helm_base --name-template $ARGOCD_APP_NAME --set debug=${DEBUG},clusterName=${DESTINATION_NAME},baseRepoUrl=${BASE_REPO_URL}  --include-crds > ../../helm_base/all.yml && kustomize build"]
----
+
+--- 
 apiVersion: v1
 kind: Secret
 metadata:
-  name: at-openshift-platform
+  name: acm-git-repo
   namespace: openshift-gitops
   labels:
     argocd.argoproj.io/secret-type: repository

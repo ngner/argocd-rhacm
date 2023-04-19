@@ -29,7 +29,7 @@ oc apply -k ./START-HERE/app-of-apps/gitops-root-app.yaml
 apiVersion: v1
 kind: Secret
 metadata:
-  name: ado-repo-creds
+  name: git-repo-creds
   namespace: openshift-gitops
   labels:
     argocd.argoproj.io/secret-type: repo-creds
