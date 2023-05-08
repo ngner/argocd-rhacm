@@ -68,7 +68,6 @@ spec:
     defaultPolicy: 'role:readonly'
     policy: 'g, system:cluster-admins, role:admin'
     scopes: '[groups]'
-
 --- 
 apiVersion: v1
 kind: Secret
