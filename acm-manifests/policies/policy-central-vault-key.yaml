@@ -6,7 +6,7 @@ metadata:
     policy.open-cluster-management.io/categories: CM Configuration Management
     policy.open-cluster-management.io/controls: CM-2 Baseline
   name: central-vault-key-policy
-  namespace: rhacm-policies
+  namespace: policies
 spec:
   remediationAction: inform
   disabled: false
@@ -35,7 +35,7 @@ apiVersion: policy.open-cluster-management.io/v1
 kind: PlacementBinding
 metadata:
   name: central-vault-key-binding
-  namespace: rhacm-policies
+  namespace: policies
 placementRef:
   apiGroup: apps.open-cluster-management.io
   kind: PlacementRule
@@ -49,7 +49,7 @@ apiVersion: apps.open-cluster-management.io/v1
 kind: PlacementRule
 metadata:
   name: central-vault-key-placement
-  namespace: rhacm-policies
+  namespace: policies
 spec:
   clusterConditions:
     - status: 'True'

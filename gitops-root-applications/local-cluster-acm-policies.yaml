@@ -5,9 +5,9 @@ metadata:
   namespace: openshift-gitops
 spec:
   destination:
-    namespace: rhacm-policies
+    namespace: policies
     server: https://kubernetes.default.svc
-  project: rhacm-policies
+  project: policies
   source:
     path: acm-manifests/policies
     repoURL: https://github.com/ngner/argocd-rhacm.git
@@ -19,7 +19,7 @@ spec:
       prune: true
       selfHeal: true
 
-# Note we need to tell ArgoCD to ignore the rhacm-policies rendered by ACM otherwise ArgoCD thinks they should be pruned when syncing. 
+# Note we need to tell ArgoCD to ignore the policies rendered by ACM otherwise ArgoCD thinks they should be pruned when syncing. 
 # To do this we need a seperate ArgoCD project 
 
 ---
@@ -27,14 +27,14 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: rhacm-policies
+  name: policies
   namespace: openshift-gitops
 spec:
   clusterResourceWhitelist:
   - group: '*'
     kind: '*'
   destinations:
-  - namespace: 'rhacm-policies'
+  - namespace: 'policies'
     name: 'local-cluster-acm-policies'
     server: '*'
   sourceRepos:
