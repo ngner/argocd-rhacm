@@ -12,6 +12,7 @@ generatorOptions:
 resources:
   - namespace.yaml
   - gitops-operator.yaml
+  - root-app
   #temporairly add a secret per the template in the README.md and then after delete it.
   #  DO NOT Commit this secret to the git repo.
   - git-secret.yaml
