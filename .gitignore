@@ -2,6 +2,7 @@
 #avoid any customer specific items
 gitops-manifests/configurations/hub-cluster/ldap
 gitops-manifests/configurations/hub-cluster/certificates
+START-HERE/git-secret.yaml
 
 *.patch
 *.orig
