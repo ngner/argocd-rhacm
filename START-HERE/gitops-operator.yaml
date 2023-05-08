@@ -19,8 +19,8 @@ spec:
     #   value: "true"
     # We want to allow for more than just applicaitons and policies on local cluster.
     # We want to allow for all cluster namespaces to deploy clusters.
-    # - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
-    #   value: openshift-gitops,open-cluster-management-global-set, policies
+    - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
+      value: openshift-gitops,open-cluster-management-global-set
     #NOTE: Namespaces which will be managed by the ArgoCD must be above or have label `argocd.argoproj.io/managed-by=openshift-gitops`
   #startingCSV: openshift-gitops-operator.v1.5.4
 ---
@@ -119,7 +119,6 @@ rules:
   verbs:
   - '*'
 
-##TODO check operator.open-....  apps. policy.  cluster.)managedcluster
 ---
 
 apiVersion: rbac.authorization.k8s.io/v1
