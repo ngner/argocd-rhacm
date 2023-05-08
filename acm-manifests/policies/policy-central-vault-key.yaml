@@ -1,0 +1,63 @@
+apiVersion: policy.open-cluster-management.io/v1
+kind: Policy
+metadata:
+  annotations:
+    policy.open-cluster-management.io/standards: NIST 800-53
+    policy.open-cluster-management.io/categories: CM Configuration Management
+    policy.open-cluster-management.io/controls: CM-2 Baseline
+  name: central-vault-key-policy
+  namespace: policies
+spec:
+  remediationAction: inform
+  disabled: false
+  policy-templates:
+    - objectDefinition:
+        apiVersion: policy.open-cluster-management.io/v1
+        kind: ConfigurationPolicy
+        metadata:
+          name: central-vault-key-policy
+        spec:
+          object-templates:
+            - complianceType: musthave
+              objectDefinition:
+                apiVersion: v1
+                data:
+                  secret-id: '{{hub fromSecret "policies" "central-vault-key" "secret-id" hub}}'
+                kind: Secret
+                metadata:
+                  name: central-vault-key
+                  namespace: external-secrets-system
+                type: Opaque
+              remediationAction: enforce
+              severity: high
+---
+apiVersion: policy.open-cluster-management.io/v1
+kind: PlacementBinding
+metadata:
+  name: central-vault-key-binding
+  namespace: policies
+placementRef:
+  apiGroup: apps.open-cluster-management.io
+  kind: PlacementRule
+  name: central-vault-key-placement
+subjects:
+  - apiGroup: policy.open-cluster-management.io
+    kind: Policy
+    name: central-vault-key-policy
+---
+apiVersion: apps.open-cluster-management.io/v1
+kind: PlacementRule
+metadata:
+  name: central-vault-key-placement
+  namespace: policies
+spec:
+  clusterConditions:
+    - status: 'True'
+      type: ManagedClusterConditionAvailable
+  clusterSelector:
+    matchExpressions:
+      - key: cluster.open-cluster-management.io/clusterset
+        operator: NotIn
+        values:
+          - local-cluster
+

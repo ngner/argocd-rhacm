@@ -10,4 +10,4 @@ kind: Kustomization
 resources:
   - example-configs
   #- ldap
-  - certificates
+  #- certificates
