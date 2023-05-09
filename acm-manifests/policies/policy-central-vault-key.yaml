@@ -8,7 +8,7 @@ metadata:
   name: central-vault-key-policy
   namespace: policies
 spec:
-  remediationAction: inform
+  remediationAction: enforce
   disabled: false
   policy-templates:
     - objectDefinition:
