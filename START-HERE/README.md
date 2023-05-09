@@ -5,6 +5,7 @@ These resources will deploy OpenShift GitOps operator and have it bootstrap ever
 simply run
 
 ```bash
+password={yourgit repo token string for Argo to use}
 oc apply -k ./START-HERE
 ```
 
@@ -20,31 +21,21 @@ You will need to create a credential to access the Repository.  Use the token cr
 
 ## Deploy the root application
 
+The below can be avoided by simply running `oc apply -k .` then waiting and trying again.
+
 We need to wait for Git Ops operator to complete before we can deploy an argoproj/Application resource.  The resource type is not recognised until Install is complete.
 
 ```bash
 oc apply -k ./START-HERE/app-of-apps/gitops-root-app.yaml
 ```
 
-```yaml
-apiVersion: v1
-kind: Secret
-metadata:
-  name: git-repo-creds
-  namespace: openshift-gitops
-  labels:
-    argocd.argoproj.io/secret-type: repo-creds
-stringData:
-  type: git
-  url: https://github.com/ngner/argocd-rhacm.git
-  #password: TOKEN-FROM-Gitlab
-  #username: gitlab+deploy-token-{some-number-from-gitlab}
-```
 
 ## TBC still - what further RBAC roles and perms required
 
 [Configuring clusters with ArgoCD ref docs](https://docs.openshift.com/container-platform/4.11/cicd/gitops/configuring-an-openshift-cluster-by-deploying-an-application-with-cluster-configurations.html)
 
-Added to this are the apiGroups open-cluster-management.io
+Assess the use of one cluster scoped service account for all argoCD instances instead have more specific ones for e.g. policy and workload app-of-apps
 
-NOTE: Namespaces which will be managed by the ArgoCD must have label `argocd.argoproj.io/managed-by=openshift-gitops`
+Limiting further what resources the root-apps can deploy through app-project.
+
+Applying App-projects for all root-apps.

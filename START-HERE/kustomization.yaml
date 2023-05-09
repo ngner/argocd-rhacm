@@ -8,11 +8,34 @@ namespace: openshift-gitops
 generatorOptions:
   disableNameSuffixHash: true
 
+secretGenerator:
+- name: git-repo-creds
+  envs:
+  - gitsecret.env
+  literals:
+  - type=git
+  - url=https://github.com/ngner/argocd-rhacm.git
+  - username=argocd-rhacm
+
+patches:
+- patch: |-
+    apiVersion: v1
+    kind: Secret
+    metadata:
+      name: git-repo-creds
+      labels:
+        argocd.argoproj.io/secret-type: repo-creds
+
 # list of Resource Config to be Applied
 resources:
   - namespace.yaml
   - gitops-operator.yaml
   - root-app
+  # for git-secret use environment variable password={somepassword for git} before running oc apply -k .
+
+
+
+
   #temporairly add a secret per the template in the README.md and then after delete it.
   #  DO NOT Commit this secret to the git repo.
-  - git-secret.yaml
+  # - git-secret.yaml
