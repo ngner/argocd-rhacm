@@ -42,11 +42,11 @@ metadata:
 rules:
 ## Enable Argo to manage ACM resources apiGroup "operator.open-cluster-management.io"
 - apiGroups:
-  - open-cluster-management.io
-  - operator.open-cluster-management.io
-  - apps.open-cluster-management.io
-  - policy.open-cluster-management.io
-  - cluster.open-cluster-management.io
+  - "*.open-cluster-management.io"
+  # - operator.open-cluster-management.io
+  # - apps.open-cluster-management.io
+  # - policy.open-cluster-management.io
+  # - cluster.open-cluster-management.io
   resources:
   - '*'
   verbs:
