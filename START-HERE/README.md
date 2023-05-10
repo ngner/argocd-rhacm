@@ -15,7 +15,6 @@ Once complete then we can deploy the root Application or App of Apps, this provi
 
 The resrouces applied to the Hub Cluster will in turn, through services like ACM and OCP GitOps etc, start deploying clusters, deplying operators and configiuation and applications to those clusters.
 
-
 You will need to create a credential to access the Git Repository.  Use the token creation function in ADO or other GIt to create Token then set it as an envrironment variable before running apply.
 Gather your main vault key, this should enable access to a vault-of-vaults which will hold other vaults keys for the External Secrets Operators on the remote clusters.
 
@@ -33,7 +32,6 @@ We need to wait for Git Ops operator to complete before we can deploy an argopro
 ```bash
 oc apply -k ./START-HERE/app-of-apps/gitops-root-app.yaml
 ```
-
 
 ## TBC still - what further RBAC roles and perms required
 
