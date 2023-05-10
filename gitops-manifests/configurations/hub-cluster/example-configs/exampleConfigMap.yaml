@@ -12,3 +12,27 @@ data:
     lots of interesting text 
     on several lines of ig_unit_information:
     client:  # not required. A dict object containing connection details.   
+
+
+--- 
+
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: example-secret
+  namespace: gitops-test
+spec:
+  refreshInterval: 1h
+  secretStoreRef:
+    name: fake
+    kind: ClusterSecretStore
+  target:
+    name: secret-to-be-created
+  data:
+  - secretKey: foo_bar
+    remoteRef:
+      key: /foo/bar
+      version: v1
+  dataFrom:
+  - extract:
+      key: /foo/baz
