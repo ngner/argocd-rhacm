@@ -16,6 +16,9 @@ secretGenerator:
   - type=git
   - url=https://github.com/ngner/argocd-rhacm.git
   - username=argocd-rhacm
+- name: central-vault-key
+  envs:
+  - central-vault-key-secret.env
 
 patches:
 - patch: |-
@@ -35,7 +38,3 @@ resources:
 
 
 
-
-  #temporairly add a secret per the template in the README.md and then after delete it.
-  #  DO NOT Commit this secret to the git repo.
-  # - git-secret.yaml

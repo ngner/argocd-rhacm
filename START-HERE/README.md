@@ -15,9 +15,14 @@ Once complete then we can deploy the root Application or App of Apps, this provi
 
 The resrouces applied to the Hub Cluster will in turn, through services like ACM and OCP GitOps etc, start deploying clusters, deplying operators and configiuation and applications to those clusters.
 
-## TODO - curently use branch `main` until the merge policies are agreed
 
-You will need to create a credential to access the Repository.  Use the token creation function in ADO to create Token for use then either use the GUI to deploy or the following template for a secret DON'T CHECK IT IN TO GIT !!!
+You will need to create a credential to access the Git Repository.  Use the token creation function in ADO or other GIt to create Token then set it as an envrironment variable before running apply.
+Gather your main vault key, this should enable access to a vault-of-vaults which will hold other vaults keys for the External Secrets Operators on the remote clusters.
+
+```bash
+password={some token from git}
+secret-id={vault key secret for ESO}
+```
 
 ## Deploy the root application
 
