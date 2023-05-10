@@ -15,127 +15,18 @@ spec:
   config:
     env:
     # We will use the Default Argo Instance - one can have seperate instances for Local (policy and ACM), Global, Teams etc.
-    # - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
-    #   value: "true"
-    # We want to allow for more than just applicaitons and policies on local cluster.
-    # We want to allow for all cluster namespaces to deploy clusters.
+    - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
+      value: "true"
+
     - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
-      value: openshift-gitops,open-cluster-management-global-set
-    #NOTE: Namespaces which will be managed by the ArgoCD must be above or have label `argocd.argoproj.io/managed-by=openshift-gitops`
+      value: open-cluster-management-global-set, dk8se-gitops-root-sub
+    #NOTE: Namespaces from which Applications can be source 
+    # Those managed by ArgoCD must have label `argocd.argoproj.io/managed-by=dk8se-gitops-root-sub`
   #startingCSV: openshift-gitops-operator.v1.5.4
 ---
 
 apiVersion: operators.coreos.com/v1
+
 kind: OperatorGroup
 metadata:
   name: openshift-gitops-operator
-spec:
-  selector:
-    openshift-gitops-operator: "true"
----
-
-#TODO RBAC check....
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRole
-metadata:
-  name: gitops-service-account
-rules:
-## Enable Argo to manage ACM resources apiGroup "operator.open-cluster-management.io"
-- apiGroups:
-  - "*.open-cluster-management.io"
-  # - operator.open-cluster-management.io
-  # - apps.open-cluster-management.io
-  # - policy.open-cluster-management.io
-  # - cluster.open-cluster-management.io
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - ''
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - kafka.strimzi.io
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - ''
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - apps
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - image.openshift.io
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - route.openshift.io
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - camel.apache.org
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - apps.openshift.io
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - monitoring.coreos.com
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - triggers.tekton.dev
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - tekton.dev
-  resources:
-  - '*'
-  verbs:
-  - '*'
-
----
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: gitops-service-account
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: gitops-service-account
-subjects:
-- kind: ServiceAccount
-  name: openshift-gitops-argocd-application-controller
-  namespace: openshift-gitops
-- kind: ServiceAccount
-  name: argocd-cluster-argocd-application-controller
-  namespace: openshift-gitops
-- kind: ServiceAccount
-  name: argocd-cluster-argocd-server
-  namespace: openshift-gitops
-
