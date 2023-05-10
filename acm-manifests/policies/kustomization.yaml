@@ -7,3 +7,4 @@ resources:
   - policy-certificate.yaml
   - policy-external-secrets-operator.yaml
   - policy-central-vault-key.yaml
+  - policy-clustersecretstore-central-vault.yaml
