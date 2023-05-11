@@ -45,6 +45,17 @@ kind: ClusterRole
 metadata:
   name: gitops-service-account
 rules:
+## Until MCH is established the buit in roles for ACM don't exist.
+- apiGroups:
+  - operator.open-cluster-management.io
+  - apps.open-cluster-management.io
+  - policy.open-cluster-management.io
+  - cluster.open-cluster-management.io
+  resources:
+  - '*'
+  verbs:
+  - '*'
+  
 ## Enable Argo to manage non ACM resources 
 - apiGroups:
   - ''
