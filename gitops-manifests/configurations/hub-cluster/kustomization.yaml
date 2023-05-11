@@ -9,6 +9,5 @@ kind: Kustomization
 
 resources:
   - example-configs
-  - ../../../START-HERE/gitops-sa-rbac.yaml
   #- ldap
   #- certificates
