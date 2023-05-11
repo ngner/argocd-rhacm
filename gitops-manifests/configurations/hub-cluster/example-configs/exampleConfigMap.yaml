@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: nicks-configmap
+  name: test-configmap
   namespace: gitops-test
 data:
   # property-like keys; each key maps to a simple value
@@ -21,6 +21,8 @@ kind: ExternalSecret
 metadata:
   name: example-secret
   namespace: gitops-test
+  annotations:
+    argocd.argoproj.io/sync-options: SkipDryRunOnMissingResource=true
 spec:
   refreshInterval: 1h
   secretStoreRef:
