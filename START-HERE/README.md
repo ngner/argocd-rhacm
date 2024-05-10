@@ -5,7 +5,7 @@ These resources will deploy OpenShift GitOps operator and have it bootstrap ever
 First find and replace my repo URL with yours `grep -r argocd-rhacm ../`
 
 ```bash
-password={yourgit repo token string for Argo to use}
+echo "password={yourgit repo token string for Argo to use}" >> gitsecret.env"
 oc apply -k ./START-HERE
 ```
 
@@ -15,12 +15,13 @@ Once complete then we can deploy the root Application or App of Apps, this provi
 
 The resrouces applied to the Hub Cluster will in turn, through services like ACM and OCP GitOps etc, start deploying clusters, deplying operators and configiuation and applications to those clusters.
 
-You will need to create a credential to access the Git Repository.  Use the token creation function in ADO or other GIt to create Token then set it as an envrironment variable before running apply.
-Gather your main vault key, this should enable access to a vault-of-vaults which will hold other vaults keys for the External Secrets Operators on the remote clusters.
+You will need to create a credential to access the Git Repository.  Use the token creation function in ADO or other GIt to create Token then set it as the value for `password=` in gisecret.env.
+Gather your main vault key, this should enable access to a vault-of-vaults which will hold other vaults keys for the External Secrets Operators on the remote clusters set this as the value for `secret-id=` in central-vault-key-secret.env.
 
 ```bash
-password={some token from git}
-secret-id={vault key secret for ESO}
+echo "password={yourgit repo token string for Argo to use}" >> gitsecret.env
+echo "secret-id={secret-id={vault key secret for ESO}" >> central-vault-key-secret.env
+
 ```
 
 ## Deploy the root application
