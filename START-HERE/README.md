@@ -2,7 +2,7 @@
 
 These resources will deploy OpenShift GitOps operator and have it bootstrap everything in an App of Apps style.
 
-simply run
+First find and replace my repo URL with yours `grep -r argocd-rhacm ../`
 
 ```bash
 password={yourgit repo token string for Argo to use}
