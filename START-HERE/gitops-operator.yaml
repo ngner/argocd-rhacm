@@ -15,18 +15,19 @@ spec:
   config:
     env:
     # We will use the Default Argo Instance - one can have seperate instances for Local (policy and ACM), Global, Teams etc.
-    # - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
-    #   value: "true"
     # We want to allow for more than just applicaitons and policies on local cluster.
     # We want to allow for all cluster namespaces to deploy clusters.
+    - name: DISABLE_DEFAULT_ARGOCD_INSTANCE
+      value: "true"
     - name: ARGOCD_CLUSTER_CONFIG_NAMESPACES
-      value: openshift-gitops,open-cluster-management-global-set
+    #these are namespaces in which you install argocd, those instances can then have namespaces: All Namespaces to allow deployment to any namespace.
+      value: openshift-gitops,ztp-gitops,open-cluster-management-global-set,policies,rhacm_policies,
     #NOTE: Namespaces which will be managed by the ArgoCD must be above or have label `argocd.argoproj.io/managed-by=openshift-gitops`
   #startingCSV: openshift-gitops-operator.v1.5.4
 ---
-
 apiVersion: operators.coreos.com/v1
-
 kind: OperatorGroup
 metadata:
   name: openshift-gitops-operator
+  namespace: openshift-gitops
+spec: {}

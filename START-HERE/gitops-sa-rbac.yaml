@@ -1,70 +1,11 @@
 ---
-## Allow GitOps to act as Cluster Management Admin
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: gitops-service-account-cluster-manager-admin
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: open-cluster-management:cluster-manager-admin
-subjects:
-- kind: ServiceAccount
-  name: openshift-gitops-argocd-application-controller
-  namespace: openshift-gitops
-
-
----
-# Allow gitops service account to deploy non-acm resources
-
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: gitops-service-account
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: gitops-service-account
-subjects:
-- kind: ServiceAccount
-  name: openshift-gitops-argocd-application-controller
-  namespace: openshift-gitops
-- kind: ServiceAccount
-  name: argocd-cluster-argocd-application-controller
-  namespace: openshift-gitops
-- kind: ServiceAccount
-  name: argocd-cluster-argocd-server
-  namespace: openshift-gitops
-
-  
----
-
-#TODO RBAC check....
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: gitops-service-account
 rules:
-## Until MCH is established the buit in roles for ACM don't exist.
 - apiGroups:
-  - operator.open-cluster-management.io
-  - apps.open-cluster-management.io
-  - policy.open-cluster-management.io
-  - cluster.open-cluster-management.io
-  resources:
-  - '*'
-  verbs:
-  - '*'
-  
-## Enable Argo to manage non ACM resources 
-- apiGroups:
-  - ''
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
-  - kafka.strimzi.io
+  - open-cluster-management.io
   resources:
   - '*'
   verbs:
@@ -94,12 +35,6 @@ rules:
   verbs:
   - '*'
 - apiGroups:
-  - camel.apache.org
-  resources:
-  - '*'
-  verbs:
-  - '*'
-- apiGroups:
   - apps.openshift.io
   resources:
   - '*'
@@ -124,17 +59,88 @@ rules:
   verbs:
   - '*'
 - apiGroups:
-  - external-secrets.io
+  - policy.open-cluster-management.io
+  resources:
+  - placementbindings
+  - policies
+  - policysets
+  verbs:
+  - '*'
+- apiGroups:
+  - apps.open-cluster-management.io
+  resources:
+  - placementrules
+  verbs:
+  - '*'
+- apiGroups:
+  - operator.open-cluster-management.io
+  resources:
+  - multiclusterhubs
+  verbs:
+  - '*'
+- apiGroups:
+  - cluster.open-cluster-management.io
+  resources:
+  - managedclustersets
+  - managedclustersetbindings
+  - placements
+  verbs:
+  - '*'
+- apiGroups:
+  - argoproj.io
+  resources:
+  - argocds
+  - appprojects
+  - applications
+  verbs:
+  - '*'
+- apiGroups:
+  - metal3.io
+  resources:
+  - provisionings
+  verbs:
+  - '*'
+- apiGroups:
+  - agent-install.openshift.io
+  resources:
+  - agentserviceconfigs
+  - nmstateconfigs
+  verbs:
+  - '*'
+- apiGroups:
+  - ran.openshift.io
   resources:
   - '*'
   verbs:
   - '*'
 - apiGroups:
-  - cert-manager.io
+  - nmstate.io
   resources:
-  - '*'
+  - "nodenetworkconfigurationpolicies"
   verbs:
   - '*'
- 
-
-
+- apiGroups:
+  - cluster.open-cluster-management.io
+  resources:
+  - clusterclaims
+  verbs:
+  - '*'
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: gitops-service-account
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: gitops-service-account
+subjects:
+- kind: ServiceAccount
+  name: gitops-root-argocd-application-controller
+  namespace: openshift-gitops
+- kind: ServiceAccount
+  name: argocd-cluster-argocd-application-controller
+  namespace: openshift-gitops
+- kind: ServiceAccount
+  name: argocd-cluster-argocd-server
+  namespace: openshift-gitops

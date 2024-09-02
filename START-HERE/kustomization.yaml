@@ -35,7 +35,7 @@ resources:
   - gitops-operator.yaml
   - root-app
   - gitops-sa-rbac.yaml
-  # for git-secret use environment variable password={somepassword for git} before running oc apply -k .
+  - crb-manageclusterset-admin-gitops-sa.yaml.
 
 
 
